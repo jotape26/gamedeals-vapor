@@ -1,6 +1,6 @@
 import Vapor
 import Fluent
-import FluentSQLiteDriver
+import FluentPostgresDriver
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -10,9 +10,11 @@ public func configure(_ app: Application) throws {
     // register routes
     try routes(app)
     
-    app.databases.use(.sqlite(.memory), as: .sqlite)
-    app.migrations.add(GameDeal(), to: .sqlite)
-    try app.autoMigrate().wait()
+    var configuration = PostgresConfiguration(url: Environment.get("DATABASE_URL")!)
+    configuration!.tlsConfiguration?.certificateVerification = .fullVerification
+    try app.databases.use(.postgres(configuration: configuration!), as: .psql)
     
+    app.migrations.add(GameDeal(), to: .psql)
+    try app.autoMigrate().wait()
     try XboxDataBusiness().populateDatabase(fromApp: app)
 }
