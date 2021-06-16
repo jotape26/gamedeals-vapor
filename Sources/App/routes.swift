@@ -43,20 +43,24 @@ func routes(_ app: Application) throws {
         
         guard let productID = params["productID"] as? String else { throw Abort(.custom(code: 400, reasonPhrase: "No \"ProductID\" provided")) }
         
-        let sem = DispatchSemaphore(value: 1)
-        var fetchedGame : Game!
-        
-        sem.wait()
-        XboxDataBusiness().getRelatedDetails(relatedID: productID) { game in
-            fetchedGame = game
+        if let deal = Session.current.activeDeals.first(where: { $0.productId == productID }) {
+            return deal
+        } else {
+            let sem = DispatchSemaphore(value: 1)
+            var fetchedGame : Game!
+            
+            sem.wait()
+            XboxDataBusiness().getRelatedDetails(relatedID: productID) { game in
+                fetchedGame = game
+                sem.signal()
+            }
+            
+            sem.wait()
+            guard fetchedGame != nil else { sem.signal(); throw Abort(.internalServerError) }
             sem.signal()
+            
+            return fetchedGame
         }
-        
-        sem.wait()
-        guard fetchedGame != nil else { sem.signal(); throw Abort(.internalServerError) }
-        sem.signal()
-        
-        return fetchedGame
     }
 }
 
