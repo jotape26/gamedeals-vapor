@@ -8,7 +8,6 @@
 import Foundation
 import Vapor
 import Fluent
-import SwiftyJSON
 import NIOFoundationCompat
 
 final class GameDeal: Content, Model, Migration {
