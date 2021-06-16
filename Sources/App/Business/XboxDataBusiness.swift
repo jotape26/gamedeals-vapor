@@ -27,11 +27,10 @@ final class XboxDataBusiness {
                 
                 guard let gameIds = try? resp.content.decode(DealsListResponse.self)
                         .Items
-                        .map({ $0.Id })
-                        .joined(separator: ",") else { return }
+                        .map({ $0.Id }) else { return }
                 
                 _ = app.client
-                    .get("https://displaycatalog.mp.microsoft.com/v7.0/products?market=BR&languages=pt-br&MS-CV=DGU1mcuYo0WMMp+F.1&bigIds=\(gameIds)")
+                    .get("https://displaycatalog.mp.microsoft.com/v7.0/products?market=BR&languages=pt-br&MS-CV=DGU1mcuYo0WMMp+F.1&bigIds=\(gameIds.joined(separator: ","))")
                     .map({ resp in
                         
                         guard let body = resp.body,
@@ -42,19 +41,60 @@ final class XboxDataBusiness {
                         
                         guard let products = responseDictionary["Products"] as? [[String : Any]] else { return }
                         
-                        let gameDealsList = products.map { product -> GameDeal in
+                        let gameDealsList = products.enumerated().map { index, product -> Game in
                             
                             let skuAvailabilities = (product["DisplaySkuAvailabilities"] as? [[String : Any]])?.first ?? [:]
-                            let skuObj = skuAvailabilities["Sku"] as? [String : Any] ?? [:]
-                            let localizedProperties = (skuObj["LocalizedProperties"] as? [[String : Any]])?.first ?? [:]
+                            let localizedProperties = (product["LocalizedProperties"] as? [[String : Any]])?.first ?? [:]
+                            let marketProperties = (product["MarketProperties"] as? [[String : Any]])?.first ?? [:]
                             
                             let availabilities = (skuAvailabilities["Availabilities"] as? [[String: Any]])?.first ?? [:]
                             let priceInfo = (availabilities["OrderManagementData"] as? [String : Any])?["Price"] as? [String : Any] ?? [:]
                             
-                            return GameDeal(productId: product["ProductId"] as! String,
-                                            gameName: localizedProperties["SkuTitle"] as! String,
-                                            originalPrice: priceInfo["MSRP"] as! Double,
-                                            discountedPrice: priceInfo["ListPrice"] as! Double)
+                            
+                            let images = (localizedProperties["Images"] as? [[String : Any]] ?? [])
+                                .compactMap({ imageDict -> GameImageInfo? in
+                                    
+                                    if let url = imageDict["Uri"] as? String,
+                                       let height = imageDict["Height"] as? Double,
+                                       let width = imageDict["Width"] as? Double {
+                                        return GameImageInfo(imageUrl: url, height: height, width: width)
+                                    }
+                                    
+                                    return nil
+                                })
+                            
+                            let relatedIds = (marketProperties["RelatedProducts"] as? [[String : Any]] ?? [])
+                                .compactMap { relatedInfo -> String? in
+                                    return relatedInfo["RelatedProductId"] as? String
+                                }
+//
+                            let gameInformation = GameInformation(publisherName: localizedProperties["PublisherName"] as? String ?? "",
+                                                                  images: images,
+                                                                  description: localizedProperties["ShortDescription"] as? String ?? "",
+                                                                  type: product["ProductType"] as? String ?? "",
+                                                                  relatedIds: relatedIds)
+                            
+                            let gamePriceInfo = PriceInfo(currencyCode: priceInfo["CurrencyCode"] as? String ?? "",
+                                                      originalMSRP: priceInfo["MSRP"] as? Double ?? 0.0,
+                                                      discountPrice: priceInfo["ListPrice"] as? Double ?? 0.0)
+                            
+                            
+                            return Game(productId: gameIds[index],
+                                        game: gameInformation,
+                                        price: gamePriceInfo)
+//                            var publisherName : String
+//                            var gameImages : [GameImageInfo]
+//
+//                            var shortDescription : String
+//                            var productType : String
+//
+//                            var relatedProductsID : [String]
+//
+//
+//                            return Game(productId: product["ProductId"] as! String,
+//                                            gameName: localizedProperties["SkuTitle"] as! String,
+//                                            originalPrice: priceInfo["MSRP"] as! Double,
+//                                            discountedPrice: priceInfo["ListPrice"] as! Double)
                         }
                         
 //                        gameDealsList.forEach {

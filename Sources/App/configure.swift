@@ -14,7 +14,7 @@ public func configure(_ app: Application) throws {
 //    configuration!.tlsConfiguration?.certificateVerification = .fullVerification
 //    try app.databases.use(.postgres(configuration: configuration!), as: .psql)
 //
-//    app.migrations.add(GameDeal(), to: .psql)
+//    app.migrations.add(Game(), to: .psql)
 //    try app.autoMigrate().wait()
     try XboxDataBusiness().populateDatabase(fromApp: app)
 }
@@ -24,5 +24,5 @@ class Session {
     
     static var current : Session = Session()
     
-    var activeDeals : [GameDeal] = []
+    var activeDeals : [Game] = []
 }
