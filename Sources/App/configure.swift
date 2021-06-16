@@ -16,7 +16,7 @@ public func configure(_ app: Application) throws {
 //
 //    app.migrations.add(Game(), to: .psql)
 //    try app.autoMigrate().wait()
-    try XboxDataBusiness().populateDatabase(fromApp: app)
+    try XboxDataBusiness().getGameDeals(completion: { Session.current.updateActiveDeals($0) })
 }
 
 
@@ -24,5 +24,13 @@ class Session {
     
     static var current : Session = Session()
     
-    var activeDeals : [Game] = []
+    private var operationSemaphore: DispatchSemaphore = DispatchSemaphore(value: 1)
+    private(set) var activeDeals : [Game] = []
+    
+    func updateActiveDeals(_ newDeals: [Game]) {
+        operationSemaphore.wait()
+        activeDeals.append(contentsOf: newDeals)
+        operationSemaphore.signal()
+    }
+    
 }
