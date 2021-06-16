@@ -57,9 +57,11 @@ final class XboxDataBusiness {
                                             discountedPrice: priceInfo["ListPrice"] as! Double)
                         }
                         
-                        gameDealsList.forEach {
-                            _ = $0.create(on: app.db)
-                        }
+//                        gameDealsList.forEach {
+//                            _ = $0.create(on: app.db)
+//                        }
+                        
+                        Session.current.activeDeals = gameDealsList
                         
                         print("database created")
                     })
