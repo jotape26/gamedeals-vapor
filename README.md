@@ -27,7 +27,7 @@ API written in Swift using Vapor that exposes all active game deals on the Xbox 
         "discountedPrice": 7.9,
         "productID": "BV2ZVP7PJZWL",
         "imageURL": "//store-images.s-microsoft.com/image/apps.33719.71220804959101191.bad88979-60b4-40b4-af6d-182d4534c987.ecf3220f-0497-4cf1-9cee-d46d9d86ecc3",
-        "system": "Xbox",
+        "platform": "xbx",
         "originalPrice": 79,
         "gameName": "Far Cry®3 Classic Edition"
     }

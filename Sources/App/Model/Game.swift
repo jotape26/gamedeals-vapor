@@ -13,7 +13,7 @@ final class GameSimple: Content {
     
     var productID: String
     var gameName: String
-    var system : String
+    var platform : String
     var originalPrice: Double
     var discountedPrice: Double
     var imageURL: String?
@@ -22,7 +22,7 @@ final class GameSimple: Content {
         
         self.productID = productID
         self.gameName = gameName
-        self.system = system
+        self.platform = system
         self.originalPrice = originalPrice
         self.discountedPrice = discountedPrice
         self.imageURL = imageURL
@@ -65,7 +65,7 @@ final class Game: Content {
     func getSimplifiedReturn() -> GameSimple {
         return GameSimple(productID: productId,
                           gameName: gameInfo.productTitle,
-                          system: platform.getScreenName(),
+                          system: platform.rawValue,
                           originalPrice: priceInfo.originalMSRP,
                           discountedPrice: priceInfo.discountPrice,
                           imageURL: gameInfo.gameImages.first?.imageUrl)
