@@ -47,7 +47,8 @@ final class Game: Content {
     var platform   : DealPlatform!
     var productId  : String!
     var gameInfo   : GameInformation!
-    var priceInfo : PriceInfo!
+    var priceInfo  : PriceInfo!
+    var storeURL   : String!
     
     init(){}
     
@@ -58,6 +59,7 @@ final class Game: Content {
         self.gameInfo = game
         self.priceInfo = price
         
+        self.storeURL = getStoreURL()
     }
     
     func getSimplifiedReturn() -> GameSimple {
@@ -68,22 +70,39 @@ final class Game: Content {
                           discountedPrice: priceInfo.discountPrice,
                           imageURL: gameInfo.gameImages.first?.imageUrl)
     }
+    
+    private func getStoreURL() -> String {
+        let name = gameInfo.productTitle
+        let regex = try! NSRegularExpression(pattern: "[^A-Za-z0-9 ]")
+        
+        var regexedName = regex.stringByReplacingMatches(in: name,
+                                                         options: [],
+                                                         range: (name as NSString).range(of: name),
+                                                         withTemplate: "")
+        
+        regexedName = regexedName.replacingOccurrences(of: " ", with: "-")
+        
+        
+        return "https://www.microsoft.com/pt-br/p/\(regexedName)/\(productId!)"
+    }
 }
 
 final class GameInformation: Content {
     
-    var productTitle      : String
-    var publisherName     : String
-    var gameImages        : [GameImageInfo]
+    var productTitle       : String
+    var publisherName      : String
+    var gameImages         : [GameImageInfo]
     
-    var shortDescription  : String
-    var productType       : String
+    var compatibleConsoles : [String]
+    var shortDescription   : String
+    var productType        : String
     
     var relatedProductsID : [String]
     
     init(productName: String,
          publisherName: String,
          images: [GameImageInfo],
+         consoles: [String],
          description: String,
          type: String,
          relatedIds: [String]) {
@@ -91,6 +110,7 @@ final class GameInformation: Content {
         self.productTitle = productName
         self.publisherName = publisherName
         self.gameImages = images
+        self.compatibleConsoles = consoles
         self.shortDescription = description
         self.productType = type
         self.relatedProductsID = relatedIds

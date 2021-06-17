@@ -9,6 +9,25 @@ import Foundation
 import Vapor
 import NIOFoundationCompat
 
+enum XboxConsole : String {
+    case One = "ConsoleGen8"
+    case Series = "ConsoleGen9"
+    
+    var friendlyName : String {
+        get {
+            switch self {
+            case .One : return "Xbox One"
+            case .Series : return "Xbox Series S|X"
+            }
+        }
+    }
+}
+
+enum PlayStationConsole : String {
+    case PS4 = "PS4"
+    case PS5 = "PS5"
+}
+
 protocol PlatformBusiness {
     func getGameDeals(completion: @escaping ([Game]) -> ()) throws
     func getGameDetails(gameIDs: [String], completion: @escaping ([Game]) -> ())
@@ -68,6 +87,11 @@ final class XboxDataBusiness: PlatformBusiness {
         let marketProperties = (product["MarketProperties"] as? [[String : Any]])?.first ?? [:]
         
         let availabilities = (skuAvailabilities["Availabilities"] as? [[String: Any]])?.first ?? [:]
+        
+        let generalProperties = (product["Properties"] as? [String : Any]) ?? [:]
+        let compatibleConsoles : [String] = (generalProperties["XboxConsoleGenCompatible"] as? [String] ?? [])
+            .compactMap { XboxConsole(rawValue: $0)?.friendlyName }
+        
         let priceInfo = (availabilities["OrderManagementData"] as? [String : Any])?["Price"] as? [String : Any] ?? [:]
         
         
@@ -91,6 +115,7 @@ final class XboxDataBusiness: PlatformBusiness {
         let gameInformation = GameInformation(productName: localizedProperties["ProductTitle"] as? String ?? "",
                                               publisherName: localizedProperties["PublisherName"] as? String ?? "",
                                               images: images,
+                                              consoles: compatibleConsoles,
                                               description: localizedProperties["ShortDescription"] as? String ?? "",
                                               type: product["ProductType"] as? String ?? "",
                                               relatedIds: relatedIds)
