@@ -94,6 +94,7 @@ final class XboxDataBusiness: PlatformBusiness {
         
         let priceInfo = (availabilities["OrderManagementData"] as? [String : Any])?["Price"] as? [String : Any] ?? [:]
         
+        var promotionalImage: GameImageInfo?
         
         let images = (localizedProperties["Images"] as? [[String : Any]] ?? [])
             .compactMap({ imageDict -> GameImageInfo? in
@@ -101,7 +102,15 @@ final class XboxDataBusiness: PlatformBusiness {
                 if let url = imageDict["Uri"] as? String,
                    let height = imageDict["Height"] as? Double,
                    let width = imageDict["Width"] as? Double {
-                    return GameImageInfo(imageUrl: url, height: height, width: width)
+                    
+                    let image = GameImageInfo(imageUrl: url, height: height, width: width)
+                    
+                    if let purpose = imageDict["ImagePurpose"] as? String, purpose == "FeaturePromotionalSquareArt" {
+                        promotionalImage = image
+                    } else {
+                        return image
+                    }
+                    
                 }
                 
                 return nil
@@ -128,6 +137,7 @@ final class XboxDataBusiness: PlatformBusiness {
         return Game(platform: .Xbox,
                     productId: productID,
                     game: gameInformation,
-                    price: gamePriceInfo)
+                    price: gamePriceInfo,
+                    coverImage: promotionalImage)
     }
 }

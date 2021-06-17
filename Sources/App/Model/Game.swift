@@ -12,20 +12,18 @@ import NIOFoundationCompat
 final class GameSimple: Content {
     
     var productID: String
-    var gameName: String
+    var productTitle: String
     var platform : String
-    var originalPrice: Double
-    var discountedPrice: Double
-    var imageURL: String?
+    var gameCoverURL: String?
+    var priceInfo : PriceInfo
     
-    fileprivate init(productID: String, gameName: String, system: String, originalPrice: Double, discountedPrice: Double, imageURL: String? = nil) {
+    fileprivate init(productID: String, gameName: String, system: String, imageURL: String? = nil, priceInfo: PriceInfo) {
         
         self.productID = productID
-        self.gameName = gameName
+        self.productTitle = gameName
         self.platform = system
-        self.originalPrice = originalPrice
-        self.discountedPrice = discountedPrice
-        self.imageURL = imageURL
+        self.gameCoverURL = imageURL
+        self.priceInfo = priceInfo
         
     }
 }
@@ -50,25 +48,28 @@ final class Game: Content {
     var priceInfo  : PriceInfo!
     var storeURL   : String!
     
+    var coverImage : GameImageInfo?
+    
     init(){}
     
-    init(platform: DealPlatform, productId: String, game: GameInformation, price: PriceInfo) {
+    init(platform: DealPlatform, productId: String, game: GameInformation, price: PriceInfo, coverImage: GameImageInfo?) {
         
         self.platform = platform
         self.productId = productId
         self.gameInfo = game
         self.priceInfo = price
-        
         self.storeURL = getStoreURL()
+        
+        self.coverImage = coverImage ?? game.gameImages.first ?? nil
+        
     }
     
     func getSimplifiedReturn() -> GameSimple {
         return GameSimple(productID: productId,
                           gameName: gameInfo.productTitle,
                           system: platform.rawValue,
-                          originalPrice: priceInfo.originalMSRP,
-                          discountedPrice: priceInfo.discountPrice,
-                          imageURL: gameInfo.gameImages.first?.imageUrl)
+                          imageURL: gameInfo.gameImages.first?.imageUrl,
+                          priceInfo: priceInfo)
     }
     
     private func getStoreURL() -> String {

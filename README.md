@@ -24,12 +24,15 @@ API written in Swift using Vapor that exposes all active game deals on the Xbox 
 ```json
 [
     {
-        "discountedPrice": 7.9,
+        "priceInfo": {
+            "currencyCode": "BRL",
+            "discountPrice": 7.9000000000000004,
+            "originalMSRP": 79
+        },
         "productID": "BV2ZVP7PJZWL",
-        "imageURL": "//store-images.s-microsoft.com/image/apps.33719.71220804959101191.bad88979-60b4-40b4-af6d-182d4534c987.ecf3220f-0497-4cf1-9cee-d46d9d86ecc3",
-        "platform": "xbx",
-        "originalPrice": 79,
-        "gameName": "Far Cry®3 Classic Edition"
+        "productTitle": "Far Cry®3 Classic Edition",
+        "gameCoverURL": "//store-images.s-microsoft.com/image/apps.33719.71220804959101191.bad88979-60b4-40b4-af6d-182d4534c987.ecf3220f-0497-4cf1-9cee-d46d9d86ecc3",
+        "platform": "xbx"
     }
 ]
 ```
@@ -53,20 +56,20 @@ Both URIs return the same response, but `getRelatedDetail` can fetch games outsi
 ```json
 {
     "gameInfo": {
-        "productType": "Game",
+        "productType": "Durable",
         "gameImages": [
             {
-                "height": 1080,
-                "width": 720,
-                "imageUrl": "//store-images.s-microsoft.com/image/apps.36292.13674739434371576.46d1be43-7d5d-4b71-90b0-97829522e27b.0b2c29b8-fe0f-4a1c-89d7-ce29529162c1"
+                "height": 800,
+                "width": 584,
+                "imageUrl": "//store-images.s-microsoft.com/image/apps.37388.14414709572348410.72095bc2-eee1-4d87-9f9b-bc01c18b3f78.2939186e-0da9-4e85-a643-bd368416d270"
             }
         ],
         "relatedProductsID": [
-            "9NTNVPJF1405"
+            "BTC0L0BW6LWC"
         ],
-        "productTitle": "Mortal Kombat 11 Ultimate",
-        "shortDescription": "Inclui MK11, Pacote de Kombate 1, Expansão Aftermath & Pacote de Kombate 2.\r\n\r\nAssuma o controle dos protetores do Plano Terreno em 2 aclamadas Campanhas do Modo História, enquanto eles tentam impedir Kronika de voltar o tempo e reiniciar a história. Apresenta os 37 lutadores, incluindo Rain, Mileena & Rambo.",
-        "publisherName": "Warner Bros. Games",
+        "productTitle": "Mortal Kombat 11: Aftermath",
+        "shortDescription": "\"Aftermath\" apresenta uma nova cinemática do modo história centrada ao redor da confiança e de mentiras. Liu Kang Deus do Fogo, o novo guardião do tempo e protetor do Plano Terreno, deseja proteger o futuro previsto por ele. Crie uma nova história.\r\n\r\nInclui:\r\n\r\n• Nova cinemática do modo história",
+        "publisherName": "Warner Bros. Interactive Entertainment",
         "compatibleConsoles": [
             "Xbox One",
             "Xbox Series S|X"
@@ -74,11 +77,16 @@ Both URIs return the same response, but `getRelatedDetail` can fetch games outsi
     },
     "priceInfo": {
         "currencyCode": "BRL",
-        "discountPrice": 111.59999999999999,
-        "originalMSRP": 279
+        "discountPrice": 0,
+        "originalMSRP": 0
     },
-    "storeURL": "https://www.microsoft.com/pt-br/p/Mortal-Kombat-11-Ultimate/9PG26DBX43L1",
-    "productId": "9PG26DBX43L1",
+    "storeURL": "https://www.microsoft.com/pt-br/p/Mortal-Kombat-11-Aftermath/9NTNVPJF1405",
+    "coverImage": {
+        "height": 1080,
+        "width": 1080,
+        "imageUrl": "//store-images.s-microsoft.com/image/apps.13696.14414709572348410.72095bc2-eee1-4d87-9f9b-bc01c18b3f78.f6dc502c-60dd-4846-a90f-b46514a17154"
+    },
+    "productId": "9NTNVPJF1405",
     "platform": "xbx"
 }
 ```
