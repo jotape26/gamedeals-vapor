@@ -70,13 +70,18 @@ final class XboxDataBusiness: PlatformBusiness {
         }
     }
     
-    func getRelatedDetails(relatedID: String, completion: @escaping (Game) -> ())  {
+    func getRelatedDetails(relatedID: String, completion: @escaping (Game?) -> ())  {
         Network.get("https://displaycatalog.mp.microsoft.com/v7.0/products?market=BR&languages=pt-br&MS-CV=DGU1mcuYo0WMMp+F.1&bigIds=\(relatedID)") { (resp, error) -> Void in
             
-            guard let body = resp else { return () }
-            guard let products = body["Products"] as? [[String : Any]] else { return () }
+            guard let body = resp else { completion(nil); return () }
+            guard let products = body["Products"] as? [[String : Any]] else { completion(nil); return () }
             
-            completion(self.parseDetails(products.first ?? [:], productID: relatedID))
+            if let productInfo = products.first {
+                completion(self.parseDetails(productInfo, productID: relatedID))
+            } else {
+                completion(nil)
+            }
+            
             return ()
         }
     }

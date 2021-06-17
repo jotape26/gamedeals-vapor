@@ -22,21 +22,7 @@ func routes(_ app: Application) throws {
         return activeDeals.map({ $0.getSimplifiedReturn() })
     }
     
-    app.get("getDealDetail") { req -> Game in
-        guard let params = req.body.data?.asDictionary() else { throw Abort(.badRequest) }
-        guard !params.isEmpty else { throw Abort(.custom(code: 400, reasonPhrase: "No params provided")) }
-        
-        guard let productID = params["productID"] as? String else { throw Abort(.custom(code: 400, reasonPhrase: "No \"ProductID\" provided")) }
-        
-        if let deal = Session.current.activeDeals.first(where: { $0.productId == productID }) {
-            return deal
-        } else {
-            throw Abort(.custom(code: 404, reasonPhrase: "ProductID not found. Maybe not on sale?"))
-        }
-        
-    }
-    
-    app.get("getRelatedDetail") { req -> Game in
+    app.get("getProductDetail") { req -> Game in
         
         guard let params = req.body.data?.asDictionary() else { throw Abort(.badRequest) }
         guard !params.isEmpty else { throw Abort(.custom(code: 400, reasonPhrase: "No params provided")) }
@@ -50,13 +36,15 @@ func routes(_ app: Application) throws {
             var fetchedGame : Game!
             
             sem.wait()
-            XboxDataBusiness().getRelatedDetails(relatedID: productID) { game in
-                fetchedGame = game
+            XboxDataBusiness().getRelatedDetails(relatedID: productID) { possibleGame in
+                if let game = possibleGame {
+                    fetchedGame = game
+                }
                 sem.signal()
             }
             
             sem.wait()
-            guard fetchedGame != nil else { sem.signal(); throw Abort(.internalServerError) }
+            guard fetchedGame != nil else { sem.signal(); throw Abort(.custom(code: 400, reasonPhrase: "Xbox API didn't returned information on this productID")) }
             sem.signal()
             
             return fetchedGame
