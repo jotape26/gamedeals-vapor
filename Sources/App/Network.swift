@@ -15,13 +15,20 @@ class Network {
     
     static func get(_ url: String,
                     completionHandler: @escaping (NetworkResponse?, Error?) -> ()) {
-        let client = HTTPClient(eventLoopGroupProvider: .createNew)
-        _ = client.get(url: url).map { response in
-            do {
-                completionHandler(response.body?.asDictionary(), nil)
-                try client.syncShutdown()
-            } catch {
-                fatalError()
+        
+        let workThread : DispatchQueue = DispatchQueue.global(qos: .utility)
+        
+        workThread.async {
+            let client = HTTPClient(eventLoopGroupProvider: .createNew)
+            _ = client.get(url: url).map { response in
+                workThread.async {
+                    do {
+                        completionHandler(response.body?.asDictionary(), nil)
+                        try client.syncShutdown()
+                    } catch {
+                        fatalError()
+                    }
+                }
             }
         }
     }
