@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "backend-example",
+    name: "GameDeals-VaporSS",
     platforms: [
        .macOS(.v10_15)
     ],
