@@ -60,7 +60,7 @@ final class Game: Content {
         self.priceInfo = price
         self.storeURL = getStoreURL()
         
-        self.coverImage = coverImage ?? game.gameImages.first ?? nil
+        self.coverImage = coverImage ?? game.relatedMedia.first(where: {$0.type == .Image }) ?? nil
         
     }
     
@@ -68,7 +68,7 @@ final class Game: Content {
         return GameSimple(productID: productId,
                           gameName: gameInfo.productTitle,
                           system: platform.rawValue,
-                          imageURL: gameInfo.gameImages.first?.imageUrl,
+                          imageURL: gameInfo.relatedMedia.first(where: {$0.type == .Image })?.mediaURL,
                           priceInfo: priceInfo)
     }
     
@@ -92,7 +92,7 @@ final class GameInformation: Content {
     
     var productTitle       : String
     var publisherName      : String
-    var gameImages         : [GameImageInfo]
+    var relatedMedia       : [GameImageInfo]
     
     var compatibleConsoles : [String]
     var shortDescription   : String
@@ -110,7 +110,7 @@ final class GameInformation: Content {
         
         self.productTitle = productName
         self.publisherName = publisherName
-        self.gameImages = images
+        self.relatedMedia = images
         self.compatibleConsoles = consoles
         self.shortDescription = description
         self.productType = type
@@ -122,13 +122,19 @@ final class GameInformation: Content {
 
 final class GameImageInfo: Content {
     
-    var imageUrl : String
+    enum MediaType: String, Content {
+        case Image, Video
+    }
+    
+    var type : MediaType
+    var mediaURL : String
     var height : Double
     var width : Double
     
-    init(imageUrl: String, height: Double, width: Double) {
+    init(type: MediaType, mediaURL: String, height: Double, width: Double) {
         
-        self.imageUrl = imageUrl
+        self.type = type
+        self.mediaURL = mediaURL
         self.height = height
         self.width = width
         

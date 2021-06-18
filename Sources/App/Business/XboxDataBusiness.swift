@@ -108,7 +108,7 @@ final class XboxDataBusiness: PlatformBusiness {
                    let height = imageDict["Height"] as? Double,
                    let width = imageDict["Width"] as? Double {
                     
-                    let image = GameImageInfo(imageUrl: url, height: height, width: width)
+                    let image = GameImageInfo(type: .Image, mediaURL: url, height: height, width: width)
                     
                     if let purpose = imageDict["ImagePurpose"] as? String, purpose == "FeaturePromotionalSquareArt" {
                         promotionalImage = image

@@ -53,20 +53,21 @@ API written in Swift using Vapor that exposes all active game deals on the Xbox 
 ```json
 {
     "gameInfo": {
-        "productType": "Game",
-        "gameImages": [
+        "productType": "Durable",
+        "relatedMedia": [
             {
+                "mediaURL": "//store-images.s-microsoft.com/image/apps.37388.14414709572348410.72095bc2-eee1-4d87-9f9b-bc01c18b3f78.2939186e-0da9-4e85-a643-bd368416d270",
+                "type": "Image",
                 "height": 800,
-                "width": 584,
-                "imageUrl": "//store-images.s-microsoft.com/image/apps.61045.70804610839547354.8da93c46-fd13-4b16-8ebe-e8e02c53d93e.4d99a8d0-a5e3-4cb8-a7c9-8110442d9fbf"
+                "width": 584
             }
         ],
         "relatedProductsID": [
-            "C01Z9J8S9BJP"
+            "BTC0L0BW6LWC"
         ],
-        "productTitle": "Mortal Kombat 11",
-        "shortDescription": "Mortal Kombat está de volta, melhor do que nunca, em uma evolução da icônica franquia.",
-        "publisherName": "Warner Bros. Games",
+        "productTitle": "Mortal Kombat 11: Aftermath",
+        "shortDescription": "\"Aftermath\" apresenta uma nova cinemática do modo história centrada ao redor da confiança e de mentiras. Liu Kang Deus do Fogo, o novo guardião do tempo e protetor do Plano Terreno, deseja proteger o futuro previsto por ele. Crie uma nova história.\r\n\r\nInclui:\r\n\r\n• Nova cinemática do modo história",
+        "publisherName": "Warner Bros. Interactive Entertainment",
         "compatibleConsoles": [
             "Xbox One",
             "Xbox Series S|X"
@@ -74,16 +75,17 @@ API written in Swift using Vapor that exposes all active game deals on the Xbox 
     },
     "priceInfo": {
         "currencyCode": "BRL",
-        "discountPrice": 199.99000000000001,
-        "originalMSRP": 199.99000000000001
+        "discountPrice": 0,
+        "originalMSRP": 0
     },
-    "storeURL": "https://www.microsoft.com/pt-br/p/Mortal-Kombat-11/BTC0L0BW6LWC",
+    "storeURL": "https://www.microsoft.com/pt-br/p/Mortal-Kombat-11-Aftermath/9NTNVPJF1405",
     "coverImage": {
+        "mediaURL": "//store-images.s-microsoft.com/image/apps.13696.14414709572348410.72095bc2-eee1-4d87-9f9b-bc01c18b3f78.f6dc502c-60dd-4846-a90f-b46514a17154",
+        "type": "Image",
         "height": 1080,
-        "width": 1080,
-        "imageUrl": "//store-images.s-microsoft.com/image/apps.58569.70804610839547354.8da93c46-fd13-4b16-8ebe-e8e02c53d93e.e2faaa62-b30d-4f18-ae5d-28926051374c"
+        "width": 1080
     },
-    "productId": "BTC0L0BW6LWC",
+    "productId": "9NTNVPJF1405",
     "platform": "xbx"
 }
 ```
