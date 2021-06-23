@@ -1,12 +1,8 @@
 import Vapor
 
 func routes(_ app: Application) throws {
-
-    app.get { req in
-        return "It works!"
-    }
     
-    app.get("getAllGameDeals") { req -> [GameSimple] in
+    app.post("getAllGameDeals") { req -> [GameSimple] in
         
         guard let params = req.body.data?.asDictionary() else { throw Abort(.badRequest) }
         
@@ -22,7 +18,7 @@ func routes(_ app: Application) throws {
         return activeDeals.map({ $0.getSimplifiedReturn() })
     }
     
-    app.get("getProductDetail") { req -> Game in
+    app.post("getProductDetail") { req -> Game in
         
         guard let params = req.body.data?.asDictionary() else { throw Abort(.badRequest) }
         guard !params.isEmpty else { throw Abort(.custom(code: 400, reasonPhrase: "No params provided")) }
